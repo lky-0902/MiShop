@@ -2,7 +2,26 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
+// 根据前端的跨域方式做调整
+axios.defaults.baseURL = '/api'
+axios.defaults.timeout = 8000
+// 拦截器 接口错误拦截
+axios.interceptors.response.use(function(responce){
+  let res = response.data;
+  if(res.status == 0){    //成功
+    return res.data
+  }else if(res.status == 10){     //未登录报错
+    window.location.href = '/#/login'
+  }else{        //其他报错
+    alert(res.msg)
+  }
+})
+
+
+Vue.use(VueAxios,axios)
 Vue.config.productionTip = false
 
 new Vue({
