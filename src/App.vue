@@ -14,10 +14,10 @@ export default {
   },
   mounted() {
     // storage试用
-    storage.setItem('a',1)
-    storage.setItem('user',{a:1})
-    storage.setItem('abc',{a:1},'user')
-    storage.clear('a')
+    // storage.setItem('a',1)
+    // storage.setItem('user',{a:1})
+    // storage.setItem('abc',{a:1},'user')
+    // storage.clear('a')
   },
 }
 </script>

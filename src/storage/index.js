@@ -1,5 +1,3 @@
-// import { delete } from "vue/types/umd";
-
 /**
  * Storage封装
  */
