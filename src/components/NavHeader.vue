@@ -10,6 +10,7 @@
           <a href="JavaScript:;">协议规则</a>
         </div>
         <div class="topbar-user">
+          <!-- 登录与非登录两种状态下的不同显示 -->
           <a href="JavaScript:;" v-if="username">{{username}}</a>
           <a href="JavaScript:;" v-if="!username" @click="login()">登录</a>
           <a href="JavaScript:;" v-if="username">我的订单</a>
@@ -23,12 +24,15 @@
     <!-- 下部导航栏 -->
     <div class="nav-header">
       <div class="container">
+        <!-- logo -->
         <div class="header-logo">
           <a href="/#/index"></a>
         </div>
+        <!-- 产品菜单 -->
         <div class="header-menu">
           <div class="item-menu">
             <span>小米手机</span>
+            <!-- 鼠标经过菜单按钮时，显示产品子项，v-for渲染获取到的数据 -->
             <div class="children">
               <ul>
                 <li
@@ -113,6 +117,7 @@
             </div>
           </div>
         </div>
+        <!-- 搜索 -->
         <div class="header-search">
           <div class="wrapper">
             <input type="text" name="keyword" />
