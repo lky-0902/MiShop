@@ -1,3 +1,5 @@
+// 定义可复用样式，只需要在需要的地方@import再@include就能用了
+
 //flex布局复用
 @mixin flex($hov:space-between, $col:center) {
   display: flex;
