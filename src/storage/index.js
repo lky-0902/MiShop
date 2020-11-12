@@ -32,7 +32,7 @@ export default {
   clear(key,module_name) {
     let val = this.getStorage();
     if(module_name){
-      if(!val[module_name][key]) return;
+      if(!val[module_name][key]) return;  //val[module_name][key]二维数组，val数组下的module_name模块下的key
       delete val[module_name][key];
     }else{
       delete val[key];
