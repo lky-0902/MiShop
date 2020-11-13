@@ -11,7 +11,7 @@
         </div>
         <div class="topbar-user">
           <!-- 登录与非登录两种状态下的不同显示 -->
-          <a href="JavaScript:;" v-if="username">{{username}}</a>
+          <a href="JavaScript:;" v-if="username">{{ username }}</a>
           <a href="JavaScript:;" v-if="!username" @click="login()">登录</a>
           <a href="JavaScript:;" v-if="username">我的订单</a>
           <a href="JavaScript:;" class="my-cart" @click="goToCart()">
@@ -40,12 +40,12 @@
                   v-for="(item, index) in phoneList"
                   :key="index"
                 >
-                  <a :href="'/#/product/'+ item.id" target="_blank">
+                  <a :href="'/#/product/' + item.id" target="_blank">
                     <div class="pro-img">
                       <img :src="item.mainImage" :alt="item.subtitle" />
                     </div>
                     <div class="pro-name">{{ item.name }}</div>
-                    <div class="pro-price">{{ item.price | currency}}</div>
+                    <div class="pro-price">{{ item.price | currency }}</div>
                   </a>
                 </li>
               </ul>
@@ -139,19 +139,19 @@ export default {
     };
   },
   // 过滤器，将数据经过转换＋‘¥’、‘元’符号
-  filters:{
-    currency(val){
-      if(!val) return '0.00'
-      return '¥' + val.toFixed(2) + '元'
-    }
+  filters: {
+    currency(val) {
+      if (!val) return "0.00";
+      return "¥" + val.toFixed(2) + "元";
+    },
   },
   mounted() {
     this.getProductList();
   },
   methods: {
     // 跳转到登录页面
-    login(){
-      this.$router.push('/login')
+    login() {
+      this.$router.push("/login");
     },
     // 获取产品数据
     getProductList() {
@@ -159,18 +159,17 @@ export default {
         .get("/products", {
           params: {
             categoryId: "100012",
+            pageSize: 6,
           },
         })
         .then((res) => {
           // console.log(res)
-          if (res.list.length >= 6) {
-            this.phoneList = res.list.slice(0, 6);
-          }
+          this.phoneList = res.list.slice(0, 6);
         });
     },
     // 跳转到购物车页面
-    goToCart(){
-      this.$router.push('/cart')
+    goToCart() {
+      this.$router.push("/cart");
     },
   },
 };
@@ -272,6 +271,7 @@ export default {
             box-shadow: 0px 7px 6px 0px rgba(0, 0, 0, 0.11);
             z-index: 10;
             transition: height 0.5s;
+            background-color: #fff;
             .product {
               position: relative;
               float: left;
