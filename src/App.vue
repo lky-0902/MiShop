@@ -28,7 +28,11 @@ export default {
 }
 </script>
 
-<style>
+<style lang='scss'>
+/* 这里不带后缀会报错 ,这里顺序不能错*/
 @import './assets/scss/reset.scss';
+@import './assets/scss/config.scss';
+@import './assets/scss/button.scss';
+
 
 </style>

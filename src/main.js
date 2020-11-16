@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import VueLazyLoad from 'vue-lazyload'
 
 //这里不能用import引入，因为import是预编译加载，直接就拦截了，但是我们现在需要的是当mock = true才 拦截，所以用require
 const mock = true
@@ -28,6 +29,9 @@ axios.interceptors.response.use(function(response){
 
 
 Vue.use(VueAxios,axios)
+Vue.use(VueLazyLoad,{
+  loading:'/imgs/loading-svg/loading-bars.svg'
+})
 Vue.config.productionTip = false
 
 new Vue({

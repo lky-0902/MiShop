@@ -57,12 +57,12 @@
           v-for="(item, index) in adsList"
           :key="index"
         >
-          <img :src="item.img" />
+          <img v-lazy="item.img" />
         </a>
       </div>
       <div class="banner">
         <a href="/#/product/30">
-          <img src="/imgs/banner-1.png" alt="" />
+          <img v-lazy="'/imgs/banner-1.png'" alt="" />
         </a>
       </div>
     </div>
@@ -72,23 +72,20 @@
         <div class="wrapper">
           <div class="banner-left">
             <a href="/#/product/35">
-              <img src="/imgs/mix-alpha.jpg" />
+              <img v-lazy="'/imgs/mix-alpha.jpg'" />
             </a>
           </div>
           <div class="list-box">
             <div class="list" v-for="(arr, index1) in phoneList" :key="index1">
               <div class="item" v-for="(item, index2) in arr" :key="index2">
-                <span :class="{'new-pro':index2%2 == 0}">新品</span>
+                <span :class="{ 'new-pro': index2 % 2 == 0 }">新品</span>
                 <div class="item-img">
-                  <img
-                    :src="item.mainImage"
-                    alt=""
-                  />
+                  <img v-lazy="item.mainImage" alt="" />
                 </div>
                 <div class="item-info">
-                  <h3>{{item.name}}</h3>
-                  <p>{{item.subtitle}}</p>
-                  <p class="price">{{item.price}}元</p>
+                  <h3>{{ item.name }}</h3>
+                  <p>{{ item.subtitle }}</p>
+                  <p class="price" @click="addCart(item.id)">{{ item.price }}元</p>
                 </div>
               </div>
             </div>
@@ -97,12 +94,26 @@
       </div>
     </div>
     <service-bar></service-bar>
+    <modal
+      title="提示"
+      sureText="查看购物车"
+      btnType="1"
+      modalType="middle"
+      :showModal="showModal"
+      @submit="gotoCart"
+      @cancle="showModal = false"
+    >
+      <template v-slot:body>
+        <p>商品添加成功！</p>
+      </template>
+    </modal>
   </div>
 </template>
 
 <script>
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import ServiceBar from "../components/ServiceBar";
+import Modal from "../components/Modal";
 import "swiper/css/swiper.css";
 export default {
   name: "index",
@@ -110,6 +121,7 @@ export default {
     Swiper,
     SwiperSlide,
     ServiceBar,
+    Modal,
   },
   // directives: {
   //   swiper: directive,
@@ -207,25 +219,43 @@ export default {
         },
       ],
       phoneList: [],
+      showModal:false,
     };
   },
-  mounted(){
-    this.init()
+  mounted() {
+    this.init();
   },
-  methods:{
-    init(){
-      this.axios.get("/products",{
-        params:{
-          categoryId: "100012",
-          pageSize:14
-        }
-      }).then(res => {
-        console.log(res)
-        res.list = res.list.slice(6,14)
-        this.phoneList = [res.list.slice(0,4),res.list.slice(4,8)]
-      })
+  methods: {
+    init() {
+      this.axios
+        .get("/products", {
+          params: {
+            categoryId: "100012",
+            pageSize: 14,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          res.list = res.list.slice(6, 14);
+          this.phoneList = [res.list.slice(0, 4), res.list.slice(4, 8)];
+        });
+    },
+    addCart(){
+      this.showModal = true
+      
+      /*this.axios.post('/carts',{
+        productId:id,
+        seleced:true
+      }).then(() => {
+
+      }).catch(() => {
+        this.showModal = true
+      })*/
+    },
+    gotoCart(){
+      this.$router.push('/cart')
     }
-  }
+  },
 };
 </script>
 
@@ -363,10 +393,10 @@ export default {
                 font-size: $fontJ;
                 line-height: 24px;
                 color: #000;
-                &.new-pro{
+                &.new-pro {
                   background-color: #7ecf68;
                 }
-                &.kill-pro{
+                &.kill-pro {
                   background-color: #e82626;
                 }
               }
