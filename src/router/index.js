@@ -8,6 +8,7 @@ import Order from '../pages/order.vue'
 import OrderList from '../pages/orderList.vue'
 import OrderConfirm from '../pages/orderConfirm.vue'
 import OrderPay from '../pages/orderPay.vue'
+import Login from '../pages/login.vue'
 import Cart from '../pages/cart.vue'
 import AliPay from '../pages/aliPay.vue'
 Vue.use(VueRouter)
@@ -25,12 +26,12 @@ const routes = [
         component:Index
       },
       {
-        path:'/product',
+        path:'/product:id',
         name:'product',
         component:Product
       },
       {
-        path:'/detail',
+        path:'/detail:id',
         name:'detail',
         component:Detail
       }
@@ -62,6 +63,11 @@ const routes = [
         component:AliPay
       }
     ]
+  },
+  {
+    path:'/login',
+    name:'login',
+    component:Login
   },
   {
     path:'/cart',
