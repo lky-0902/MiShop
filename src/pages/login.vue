@@ -62,6 +62,7 @@ export default {
     login() {
       // 解构赋值的方法
       let { username, password } = this;
+      console.log(username)
       this.axios
         .post("/user/login", {
           username,
@@ -69,19 +70,20 @@ export default {
         })
         .then((res) => {
           console.log(res)
-          this.$cookie.set("userId", res.id, { expires: "1M" });
-          // to-do 保存用户名
+          this.$cookie.set("userId", res.id, { expires: "Session" });
+          this.$store.dispatch('saveUserName',res.username)
           this.$router.push("/index");
         });
     },
     register() {
       this.axios
         .post("/user/register", {
-          username: "lky",
-          password: "lky",
-          email: "lky@163.com",
+          username: "lky2",
+          password: "lky2",
+          email: "lky2@163.com",
         })
         .then((res) => {
+          console.log(res)
           alert("注册成功");
         });
     },

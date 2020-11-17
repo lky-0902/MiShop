@@ -5,12 +5,12 @@
 </template>
 
 <script>
-import storage from './storage'
+import storage from "./storage";
 export default {
   data() {
     return {
-      res:{}
-    }
+      res: {},
+    };
   },
   mounted() {
     // storage试用
@@ -24,29 +24,29 @@ export default {
     //   this.res = res
     //   console.log(res)
     // })
-    this.getUser()
-    this.getCartCount()
+
+    this.getUser();
+    this.getCartCount();
   },
   methods: {
-    getUser(){
-      this.axios.get('/user').then(() => {
-        // to-do 保存到vuex中
-      })
+    getUser() {
+      this.axios.get("/user").then((res) => {
+        this.$store.dispatch("saveUserName", res.username);
+      });
     },
-    getCartCount(){
-      this.axios.get('/carts/products/sum').then(() => {
-        // to-do 保存到vuex中
-      })
-    }
+    getCartCount() {
+      this.axios.get("/carts/products/sum").then((res) => {
+        console.log("zzz" + res);
+        this.$store.dispatch("saveCartCount", res);
+      });
+    },
   },
-}
+};
 </script>
 
 <style lang='scss'>
 /* 这里不带后缀会报错 ,这里顺序不能错*/
-@import './assets/scss/reset.scss';
-@import './assets/scss/config.scss';
-@import './assets/scss/button.scss';
-
-
+@import "./assets/scss/reset.scss";
+@import "./assets/scss/config.scss";
+@import "./assets/scss/button.scss";
 </style>

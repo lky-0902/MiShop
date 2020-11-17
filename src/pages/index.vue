@@ -129,7 +129,7 @@ export default {
   data() {
     return {
       swiperOptions: {
-        autoplay: 2000, //自动播放
+        autoplay: 1000, //自动播放
         loop: true, //循环
         effect: "cube", //设置切换效果
         cubeEffect: {
@@ -235,7 +235,7 @@ export default {
           },
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           res.list = res.list.slice(6, 14);
           this.phoneList = [res.list.slice(0, 4), res.list.slice(4, 8)];
         });

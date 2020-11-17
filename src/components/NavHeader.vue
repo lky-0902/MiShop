@@ -16,7 +16,7 @@
           <a href="JavaScript:;" v-if="username">我的订单</a>
           <a href="JavaScript:;" class="my-cart" @click="goToCart()">
             <span class="icon-cart"></span>
-            购物车
+            购物车({{cartCount}})
           </a>
         </div>
       </div>
@@ -134,9 +134,17 @@ export default {
   name: "nav-header",
   data() {
     return {
-      username: "",
       phoneList: [],
+      
     };
+  },
+  computed:{
+    username:function(){
+      return this.$store.state.username;
+    },
+    cartCount:function(){
+      return this.$store.state.cartCount;
+    }
   },
   // 过滤器，将数据经过转换＋‘¥’、‘元’符号
   filters: {
