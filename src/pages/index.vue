@@ -129,7 +129,11 @@ export default {
   data() {
     return {
       swiperOptions: {
-        autoplay: 1000, //自动播放
+        // 这里如果只写autoplay:1000的话，不会自动播放
+        autoplay: {
+          delay:3000,
+          disableOnInteraction:false
+        }, //自动播放
         loop: true, //循环
         effect: "cube", //设置切换效果
         cubeEffect: {
