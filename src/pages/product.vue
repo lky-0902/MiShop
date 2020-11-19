@@ -5,6 +5,7 @@
         <button class="btn">立即购买</button>
       </template>
     </ProductParams>
+    <div class="h">123</div>
   </div>
 </template>
 
@@ -22,6 +23,10 @@ export default {
   .product{
     button{
       margin-left: 10px;
+    }
+    .h{
+      background-color: #fdfdff;
+      height: 1000px;
     }
   }
 </style>
