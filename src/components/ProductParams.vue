@@ -22,16 +22,20 @@ export default {
       isFixed:false
     }
   },
+  // 监听滚动事件
   mounted(){
     window.addEventListener('scroll',this.initHeight)
   },
   methods:{
+    // 滚动事件，当滚动到相应位置时，给nav-bar添加is_fixed类
     initHeight(){
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       this.isFixed = scrollTop > 152 ? true :false
     }
   },
+  
   destroyed(){
+    // 监听销毁滚动事件
     window.removeEventListener('scroll',this.initHeight,false)
   },
 };
