@@ -1,14 +1,14 @@
 <template>
   <div class="product">
-    <ProductParams>
+    <ProductParams :title="product.name">
       <template v-slot:buy>
-        <button class="btn">立即购买</button>
+        <button class="btn" @click="buy">立即购买</button>
       </template>
     </ProductParams>
     <div class="content">
       <div class="item-bg">
-        <h2>小米8</h2>
-        <h3>8周年旗舰版</h3>
+        <h2>{{product.name}}</h2>
+        <h3>{{product.subtitle}}</h3>
         <p>
           <a href="" id="">全球首款双频 GP</a>
           <span>|</span>
@@ -19,7 +19,7 @@
           <a href="" id="">红外人脸识别</a>
         </p>
         <div class="price">
-          <span>￥<em>2599</em></span>
+          <span>￥<em>{{product.price}}</em></span>
         </div>
       </div>
       <div class="item-bg-2"></div>
@@ -51,11 +51,11 @@
           后置960帧电影般超慢动作视频，将眨眼间的美妙展现的淋漓尽致！<br />更能AI
           精准分析视频内容，15个场景智能匹配背景音效
         </p>
-        <div class="video-bg" @click="showSlide=true"></div>
+        <div class="video-bg" @click="showSlide = true"></div>
         <div class="video-box">
           <div class="overlay" v-if="showSlide"></div>
-          <div class="video" :class="{'slide':showSlide}">
-            <span class="icon-close" @click="showSlide=false"></span>
+          <div class="video" :class="{ slide: showSlide }">
+            <span class="icon-close" @click="showSlide = false"></span>
             <video
               src="/imgs/product/video.mp4"
               controls
@@ -82,6 +82,7 @@ export default {
   },
   data() {
     return {
+      product:{}, //商品信息
       swiperOption: {
         autoplay: {
           delay: 3000,
@@ -96,8 +97,24 @@ export default {
           clickable: true,
         },
       },
-      showSlide:false
+      showSlide: false, //控制视频动画效果
     };
+  },
+  mounted() {
+    this.getProductInfo()
+  },
+  methods: {
+    getProductInfo() {
+      let id = this.$route.params.id;
+      this.axios.get(`/products/${id}`).then((res) => {
+        this.product = res
+      });
+    },
+    // 立即购买按钮实现跳转到商品详情页
+    buy(){
+      let id = this.$route.params.id;
+      this.$router.push(`/detail/${id}`)
+    }
   },
 };
 </script>
