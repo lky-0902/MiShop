@@ -1,6 +1,6 @@
 <template>
   <div class="detail">
-    <ProductParams></ProductParams>
+    <ProductParams :title="product.name"></ProductParams>
     <div class="wrapper">
       <div class="container clearfix">
         <div class="swiper">
@@ -21,7 +21,7 @@
           </swiper>
         </div>
         <div class="content">
-          <h2 class="item-title">小米cc9</h2>
+          <h2 class="item-title">{{product.name}}</h2>
           <p class="item-info">
             相机全新升级 / 960帧超慢动作 / 手持超级夜景 / 全球首款双频GPS /
             骁龙845处理器 / 红
@@ -30,7 +30,7 @@
           </p>
           <div class="delivery">小米自营</div>
           <div class="item-price">
-            1799元
+            {{product.price}}元
             <span class="del">1999元</span>
           </div>
           <div class="line"></div>
@@ -41,8 +41,8 @@
           </div>
           <div class="item-version clearfix">
             <h2>选择版本</h2>
-            <div class="phone fl checked">6GB+64GB 全网通</div>
-            <div class="phone fr">4GB+64GB 移动4G</div>
+            <div class="phone fl " :class="{'checked':version==1}" @click="version=1">6GB+64GB 全网通</div>
+            <div class="phone fr" :class="{'checked':version==2}" @click="version=2">4GB+64GB 移动4G</div>
           </div>
           <div class="item-color">
             <h2>选择颜色</h2>
@@ -53,13 +53,13 @@
           </div>
           <div class="item-total">
             <div class="phone-info clearfix">
-              <div class="fl">小米CC9 6GB+64GB 全网通 深灰色</div>
-              <div class="fr">1799元</div>
+              <div class="fl">{{product.name}} {{version==1?'6GB+64GB 全网通':'4GB+64GB 移动4G'}} 深灰色</div>
+              <div class="fr">{{product.price}}元</div>
             </div>
-            <div class="phone-total">总计：1799元</div>
+            <div class="phone-total">总计：{{product.price}}元</div>
           </div>
           <div class="btn-group">
-            <a href="javascript:;" class="btn btn-huge">加入购物车</a>
+            <a href="javascript:;" class="btn btn-huge" @click="addCart">加入购物车</a>
           </div>
         </div>
       </div>
@@ -91,6 +91,9 @@ export default {
   },
   data() {
     return {
+      product: {},  //商品信息
+      version:1,    //商品版本切换
+      id:this.$route.params.id,   //获取商品ID
       swiperOption: {
         autoplay: {
           delay: 3000,
@@ -105,6 +108,25 @@ export default {
         },
       },
     };
+  },
+  mounted() {
+    this.getProductInfo();
+  },
+  methods: {
+    getProductInfo() { 
+      this.axios.get(`/products/${this.id}`).then((res) => {
+        this.product = res;
+      });
+    },
+    addCart(){
+      this.axios.post('/carts',{
+        productId:this.id,
+        selected:true
+      }).then((res) => {
+        
+        this.$store.dispatch("saveCartCount", res.cartTotalQuantity);
+      })
+    }
   },
 };
 </script>
@@ -205,8 +227,14 @@ export default {
             font-size: $fontH;
             margin-bottom: 20px;
           }
+          .color {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background-color: $colorC;
+          }
         }
-        .item-total{
+        .item-total {
           height: 108px;
           background-color: #fafafa;
           padding: 24px 33px 29px 30px;
@@ -214,40 +242,38 @@ export default {
           margin-top: 50px;
           margin-bottom: 30px;
           box-sizing: border-box;
-          .phone-info{
+          .phone-info {
             width: 100%;
           }
-          .phone-total{
+          .phone-total {
             font-size: $fontE;
             color: $colorA;
             margin-top: 18px;
           }
         }
 
-
-
         .phone {
-            width: 287px;
-            height: 50px;
-            line-height: 50px;
-            font-size: $fontI;
-            color: $colorB;
-            border: 1px solid $colorH;
-            box-sizing: border-box;
-            text-align: center;
-            cursor: pointer;
-            &.checked {
-              border: 1px solid $colorA;
-              color: $colorA;
-            }
+          width: 287px;
+          height: 50px;
+          line-height: 50px;
+          font-size: $fontI;
+          color: $colorB;
+          border: 1px solid $colorH;
+          box-sizing: border-box;
+          text-align: center;
+          cursor: pointer;
+          &.checked {
+            border: 1px solid $colorA;
+            color: $colorA;
           }
+        }
       }
     }
   }
-  .price-info{
+  .price-info {
     background-color: #f3f3f3;
     height: 340px;
-    h2{
+    h2 {
       font-size: $fontE;
       color: $colorB;
       padding-top: 38px;

@@ -130,6 +130,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   name: "nav-header",
   data() {
@@ -139,12 +140,13 @@ export default {
     };
   },
   computed:{
-    username:function(){
-      return this.$store.state.username;
-    },
-    cartCount:function(){
-      return this.$store.state.cartCount;
-    }
+    ...mapState(['username','cartCount'])
+    // username(){
+    //   return this.$store.state.username;
+    // },
+    // cartCount(){
+    //   return this.$store.state.cartCount;
+    // }
   },
   // 过滤器，将数据经过转换＋‘¥’、‘元’符号
   filters: {

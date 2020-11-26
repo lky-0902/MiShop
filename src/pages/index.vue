@@ -85,7 +85,9 @@
                 <div class="item-info">
                   <h3>{{ item.name }}</h3>
                   <p>{{ item.subtitle }}</p>
-                  <p class="price" @click="addCart(item.id)">{{ item.price }}元</p>
+                  <p class="price" @click="addCart(item.id)">
+                    {{ item.price }}元
+                  </p>
                 </div>
               </div>
             </div>
@@ -131,8 +133,8 @@ export default {
       swiperOptions: {
         // 这里如果只写autoplay:1000的话，不会自动播放
         autoplay: {
-          delay:3000,
-          disableOnInteraction:false
+          delay: 3000,
+          disableOnInteraction: false,
         }, //自动播放
         loop: true, //循环
         effect: "cube", //设置切换效果
@@ -223,7 +225,7 @@ export default {
         },
       ],
       phoneList: [],
-      showModal:false,
+      showModal: false,
     };
   },
   mounted() {
@@ -244,21 +246,23 @@ export default {
           this.phoneList = [res.list.slice(0, 4), res.list.slice(4, 8)];
         });
     },
-    addCart(){
-      this.showModal = true
-      
-      /*this.axios.post('/carts',{
-        productId:id,
-        seleced:true
-      }).then(() => {
-
-      }).catch(() => {
-        this.showModal = true
-      })*/
+    addCart(id) {
+      this.axios
+        .post("/carts", {
+          productId: id,
+          selected: true,
+        })
+        .then((res) => {
+          this.showModal = true;
+          this.$store.dispatch("saveCartCount", res.cartTotalQuantity);
+        })
+        .catch(() => {
+          this.showModal = true;
+        });
     },
-    gotoCart(){
-      this.$router.push('/cart')
-    }
+    gotoCart() {
+      this.$router.push("/cart");
+    },
   },
 };
 </script>
