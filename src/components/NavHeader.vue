@@ -13,10 +13,11 @@
           <!-- 登录与非登录两种状态下的不同显示 -->
           <a href="JavaScript:;" v-if="username">{{ username }}</a>
           <a href="JavaScript:;" v-if="!username" @click="login()">登录</a>
+          <a href="JavaScript:;" v-if="username" @click="logout()">退出</a>
           <a href="JavaScript:;" v-if="username">我的订单</a>
           <a href="JavaScript:;" class="my-cart" @click="goToCart()">
             <span class="icon-cart"></span>
-            购物车({{cartCount}})
+            购物车({{ cartCount }})
           </a>
         </div>
       </div>
@@ -130,17 +131,16 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 export default {
   name: "nav-header",
   data() {
     return {
       phoneList: [],
-      
     };
   },
-  computed:{
-    ...mapState(['username','cartCount'])
+  computed: {
+    ...mapState(["username", "cartCount"]),
     // username(){
     //   return this.$store.state.username;
     // },
@@ -157,6 +157,10 @@ export default {
   },
   mounted() {
     this.getProductList();
+    let params = this.$route.params;
+    if (params && params.from == "login") {
+      this.getCartCount();
+    }
   },
   methods: {
     // 跳转到登录页面
@@ -176,6 +180,21 @@ export default {
           // console.log(res)
           this.phoneList = res.list.slice(0, 6);
         });
+    },
+    getCartCount() {
+      this.axios.get("/carts/products/sum").then((res = 0) => {
+        console.log("zzz" + res);
+        this.$store.dispatch("saveCartCount", res);
+      });
+    },
+    // 退出登录
+    logout() {
+      this.axios.post("/user/logout").then(() => {
+        this.$message.success("退出成功");
+        this.$cookie.set("userId", "", { expires: "-1" });
+        this.$store.dispatch("saveUserName", "");
+        this.$store.dispatch("saveCartCount", 0);
+      });
     },
     // 跳转到购物车页面
     goToCart() {
@@ -223,7 +242,7 @@ export default {
       height: 112px;
       @include flex();
       // logo图标样式
-      
+
       // logo右侧菜单样式
       .header-menu {
         display: inline-block;

@@ -24,19 +24,20 @@ export default {
     //   this.res = res
     //   console.log(res)
     // })
-
-    this.getUser();
-    this.getCartCount();
+    if (this.$cookie.get("userId")) {
+      this.getUser();
+      this.getCartCount();
+    }
   },
   methods: {
     // 给res设置默认值，防止未登录显示错误
     getUser() {
-      this.axios.get("/user").then((res={}) => {
+      this.axios.get("/user").then((res = {}) => {
         this.$store.dispatch("saveUserName", res.username);
       });
     },
     getCartCount() {
-      this.axios.get("/carts/products/sum").then((res=0) => {
+      this.axios.get("/carts/products/sum").then((res = 0) => {
         console.log("zzz" + res);
         this.$store.dispatch("saveCartCount", res);
       });
