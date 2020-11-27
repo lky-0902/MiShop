@@ -6,9 +6,11 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueLazyLoad from 'vue-lazyload'
 import VueCookie from 'vue-cookie'
+import { Message } from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css';
 
 //这里不能用import引入，因为import是预编译加载，直接就拦截了，但是我们现在需要的是当mock = true才 拦截，所以用require
-const mock = true
+const mock = false
 if (mock) {
   require('./mock/api')
 }
@@ -28,7 +30,7 @@ axios.interceptors.response.use(function (response) {
     }
     return Promise.reject(res)
   } else { //其他报错
-    alert(res.msg)
+    this.$message.warning(res.msg)
     return Promise.reject(res)
   }
 })
@@ -39,6 +41,7 @@ Vue.use(VueCookie)
 Vue.use(VueLazyLoad, {
   loading: '/imgs/loading-svg/loading-bars.svg'
 })
+Vue.prototype.$message = Message
 Vue.config.productionTip = false
 
 new Vue({
