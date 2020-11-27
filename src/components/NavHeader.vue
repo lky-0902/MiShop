@@ -223,31 +223,7 @@ export default {
       height: 112px;
       @include flex();
       // logo图标样式
-      .header-logo {
-        display: inline-block;
-        width: 55px;
-        height: 55px;
-        background-color: #ff6600;
-        a {
-          display: inline-block;
-          width: 110px;
-          height: 55px;
-          &:before {
-            //scss中定义伪类用&符号
-            content: "";
-            @include bgImg(55px, 55px, "/imgs/mi-logo.png", 55px);
-            transition: margin 0.2s;
-          }
-          &:after {
-            content: "";
-            @include bgImg(55px, 55px, "/imgs/mi-home.png", 55px);
-          }
-          &:hover:before {
-            margin-left: -55px;
-            transition: margin 0.2s;
-          }
-        }
-      }
+      
       // logo右侧菜单样式
       .header-menu {
         display: inline-block;

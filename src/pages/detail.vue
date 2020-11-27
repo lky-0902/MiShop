@@ -132,8 +132,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./../assets/scss/base";
-@import "./../assets/scss/config";
+@import "./../assets/scss/base.scss";
+@import "./../assets/scss/config.scss";
 .detail {
   .wrapper {
     .container {
