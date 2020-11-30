@@ -126,6 +126,50 @@
       </div>
     </div>
     <Modal
+      title="收货地址设置"
+      btnType="1"
+      :showModal="showEditModal"
+      @cancel="showEditModal = false"
+      @submit="submitAddress"
+    >
+      <template v-slot:body>
+        <div class="edit-wrap">
+          <div class="item">
+            <input type="text" class="input" placeholder="姓名"/>
+            <input type="text" class="input" placeholder="手机号"/>
+          </div>
+          <div class="item">
+            <select name="province">
+              <option value="北京">北京</option>
+              <option value="天津">天津</option>
+              <option value="重庆">重庆</option>
+              <option value="上海">上海</option>
+            </select>
+            <select name="city">
+              <option value="北京市">北京市</option>
+              <option value="天津市">天津市</option>
+              <option value="重庆市">重庆市</option>
+              <option value="上海市">上海市</option>
+            </select>
+            <select name="district">
+              <option value="昌平区">昌平区</option>
+              <option value="海淀区">海淀区</option>
+              <option value="东城区">东城区</option>
+              <option value="西城区">西城区</option>
+              <option value="顺义区">顺义区</option>
+              <option value="房山区">房山区</option>
+            </select>
+          </div>
+          <div class="item">
+            <textarea name="street"></textarea>
+          </div>
+          <div class="item">
+            <input type="text" class="input" placeholder="邮编"/>
+          </div>
+        </div>
+      </template>
+    </Modal>
+    <Modal
       title="删除确认"
       btnType="1"
       :showModal="showDelModal"
@@ -154,7 +198,8 @@ export default {
       count:0, //商品结算数量
       checkedItem:{} ,//选中的商品的对象
       userAction:'', //用户行为 0：新增  1：编辑  2：删除
-      showDelModal:false, //是否显示是删除弹框
+      showDelModal:false, //是否显示删除弹框
+      showEditModal:true, //是否显示新增或编辑地址弹框
     };
   },
   mounted() {
@@ -372,6 +417,7 @@ export default {
   }
 
   .edit-wrap {
+    font-size: $fontJ;
     .item {
       margin-bottom: 15px;
       .input {
@@ -390,6 +436,13 @@ export default {
         line-height: 40px;
         border: 1px solid $colorH;
         margin-right: 15px;
+      }
+      textarea{
+        height: 62px;
+        width: 100%;
+        padding: 13px 15px;
+        box-sizing: border-box;
+        border: 1px solid $colorH;
       }
     }
   }
