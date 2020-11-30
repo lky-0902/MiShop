@@ -56,7 +56,7 @@
                   
                 </div>
                 <div class="action">
-                  <a href="javascript:;" class="fl">
+                  <a href="javascript:;" class="fl" @click="delAddress(item)">
                     <svg class="icon icon-del">
                       <use xlink:href="#icon-del" />
                     </svg>
@@ -125,80 +125,17 @@
         </div>
       </div>
     </div>
-    <modal
-      :title="editName"
-      btnType="1"
-      :showModal="editModal"
-      @submit="submitAddress"
-      @cancel="editModal = false"
-    >
-      <template v-slot:body>
-        <div class="edit-wrap">
-          <div class="item">
-            <input
-              type="text"
-              class="input"
-              placeholder="姓名"
-              v-model="checkedItem.receiverName"
-            />
-            <input
-              type="text"
-              class="input"
-              placeholder="手机号"
-              v-model="checkedItem.receiverMobile"
-            />
-          </div>
-          <div class="item">
-            <select name="province" v-model="checkedItem.receiverProvince">
-              <option value="北京">北京</option>
-              <option value="天津">天津</option>
-              <option value="重庆">重庆</option>
-              <option value="上海">上海</option>
-            </select>
-            <select name="city" v-model="checkedItem.receiverCity">
-              <option value="北京">北京</option>
-              <option value="天津">天津</option>
-              <option value="上海">上海</option>
-            </select>
-            <select name="district" v-model="checkedItem.receiverDistrict">
-              <option value="昌平区">昌平区</option>
-              <option value="海淀区">海淀区</option>
-              <option value="东城区">东城区</option>
-              <option value="西城区">西城区</option>
-              <option value="顺义区">顺义区</option>
-              <option value="房山区">房山区</option>
-            </select>
-          </div>
-          <div class="item">
-            <textarea
-              name="street"
-              v-model="checkedItem.receiverAddress"
-              cols="80"
-              rows="6"
-            ></textarea>
-          </div>
-          <div class="item">
-            <input
-              type="text"
-              class="input"
-              placeholder="邮编"
-              v-model="checkedItem.receiverZip"
-            />
-          </div>
-        </div>
-      </template>
-    </modal>
-    <modal
+    <Modal
       title="删除确认"
       btnType="1"
-      :showModal="deleteModal"
+      :showModal="showDelModal"
+      @cancel="showDelModal = false"
       @submit="submitAddress"
-      @cancel="deleteModal = false"
     >
       <template v-slot:body>
         <p>您确认要删除此地址吗？</p>
       </template>
-    </modal>
+    </Modal>
   </div>
 </template>
 
@@ -215,6 +152,9 @@ export default {
       cartList: [], //购物车中需要结算的商品列表
       cartTotalPrice:0, //商品总金额
       count:0, //商品结算数量
+      checkedItem:{} ,//选中的商品的对象
+      userAction:'', //用户行为 0：新增  1：编辑  2：删除
+      showDelModal:false, //是否显示是删除弹框
     };
   },
   mounted() {
@@ -222,11 +162,42 @@ export default {
     this.getCartList()
   },
   methods: {
+    // 获取地址列表
     getAddressList() {
       this.axios.get("/shippings").then((res) => {
         this.list = res.list;
       });
     },
+    // 地址的删除
+    delAddress(item){
+      this.checkedItem = item
+      this.userAction = 2
+      this.showDelModal = true
+    },
+    // 地址删除、编辑、新增
+    submitAddress(){
+      let { checkedItem,userAction } = this
+      let method,url
+      if(userAction == 0){
+        method = 'post',url = '/shippings'
+      }else if(userAction == 1){
+        method = 'put',url = `/shippings/${checkedItem.id}`
+      }else{
+        method = 'delete',url = `/shippings/${checkedItem.id}`
+      }
+      this.axios[method](url).then(res => {
+        this.closeModal()
+        this.getAddressList()
+        this.$message.success('操作成功')
+
+      })
+    },
+    closeModal(){
+      this.checkedItem = {}
+      this.userAction = 0
+      this.showDelModal = false
+    },
+    // 获取商品数据
     getCartList() {
       this.axios.get("/carts").then((res) => {
         let list = res.cartProductVoList; //获取购物车中所有商品数据
