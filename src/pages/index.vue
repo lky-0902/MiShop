@@ -103,7 +103,7 @@
       modalType="middle"
       :showModal="showModal"
       @submit="gotoCart"
-      @cancle="showModal = false"
+      @cancel="showModal = false"
     >
       <template v-slot:body>
         <p>商品添加成功！</p>

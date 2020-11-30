@@ -9,7 +9,7 @@
         <!-- 弹框头部小标题 -->
         <div class="modal-header">
           <span>{{title}}</span>
-          <a href="javascript:;" class="icon-close" @click="$emit('cancle')"></a>
+          <a href="javascript:;" class="icon-close" @click="$emit('cancel')"></a>
         </div>
         <!-- 弹框内容区,用插槽可以动态改变 -->
         <div class="modal-body">
@@ -18,10 +18,10 @@
         <!-- 弹框下部按钮区,也用插槽动态改变 -->
         <div class="modal-footer">
           <a href="javascript:;" class="btn" v-if="btnType == 1" @click="$emit('submit')">{{sureText}}</a>
-          <a href="javascript:;" class="btn btn-default" v-if="btnType == 2" @click="$emit('cancle')">{{cancleText}}</a>
+          <a href="javascript:;" class="btn btn-default" v-if="btnType == 2" @click="$emit('cancel')">{{cancelText}}</a>
           <div class="btn-group" v-if="btnType == 3">
             <a href="javascript:;" class="btn" @click="$emit('submit')">{{sureText}}</a>
-            <a href="javascript:;" class="btn btn-default" @click="$emit('cancle')">{{cancleText}}</a>
+            <a href="javascript:;" class="btn btn-default" @click="$emit('cancel')">{{cancelText}}</a>
           </div>
         </div>
       </div>
@@ -46,7 +46,7 @@ export default {
       type: String,
       default: "确定",
     },
-    cancleText: {
+    cancelText: {
       type: String,
       default: "取消",
     },
