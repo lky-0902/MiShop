@@ -141,7 +141,9 @@
           </div>
           <div class="btn-group">
             <a href="/#/cart" class="btn btn-default btn-large">返回购物车</a>
-            <a href="javascript:;" class="btn btn-large" @click="orderSubmit">去结算</a>
+            <a href="javascript:;" class="btn btn-large" @click="orderSubmit"
+              >去结算</a
+            >
           </div>
         </div>
       </div>
@@ -190,7 +192,10 @@
             </select>
           </div>
           <div class="item">
-            <textarea name="street" v-model="checkedItem.receiverAddress"></textarea>
+            <textarea
+              name="street"
+              v-model="checkedItem.receiverAddress"
+            ></textarea>
           </div>
           <div class="item">
             <input
@@ -273,11 +278,14 @@ export default {
         url,
         params = {};
       if (userAction == 0) {
-        (method = "post"), (url = "/shippings");
+        method = "post";
+        url = "/shippings";
       } else if (userAction == 1) {
-        (method = "put"), (url = `/shippings/${checkedItem.id}`);
+        method = "put";
+        url = `/shippings/${checkedItem.id}`;
       } else {
-        (method = "delete"), (url = `/shippings/${checkedItem.id}`);
+        method = "delete";
+        url = `/shippings/${checkedItem.id}`;
       }
       if (userAction == 0 || userAction == 1) {
         let {
@@ -289,7 +297,7 @@ export default {
           receiverAddress,
           receiverZip,
         } = this.checkedItem;
-        let errMsg ;
+        let errMsg;
         if (!receiverName) {
           errMsg = "请输入收货人名称";
         } else if (!receiverMobile || !/\d{11}/.test(receiverMobile)) {
@@ -307,10 +315,21 @@ export default {
           this.$message.error(errMsg);
           return;
         }
-        let params = this.checkedItem
+        // params = {
+        //   receiverName,
+        //   receiverMobile,
+        //   receiverProvince,
+        //   receiverCity,
+        //   receiverDistrict,
+        //   receiverAddress,
+        //   receiverZip,
+        // }
+        // 前面已经声明过params,所以这里不加let，加let会使数据为空
+        params = this.checkedItem;
       }
+      // console.log("发送的参数：" + params);
       this.axios[method](url, params).then((res) => {
-        console.log(params);
+        console.log(res);
         this.closeModal();
         this.getAddressList();
         this.$message.success("操作成功");
@@ -334,22 +353,24 @@ export default {
       });
     },
     // 订单提交
-    orderSubmit(){
-      let item = this.list[this.checkedIndex]
-      if(!item){
-        this.$message.error('请选择一个收货地址')
+    orderSubmit() {
+      let item = this.list[this.checkedIndex];
+      if (!item) {
+        this.$message.error("请选择一个收货地址");
       }
-      this.axios.post('/orders',{
-        shippingId:item.id
-      }).then(res => {
-        this.$router.push({
-          path:'/order/pay',
-          query:{
-            orderNo:res.orderNo
-          }
+      this.axios
+        .post("/orders", {
+          shippingId: item.id,
         })
-      })
-    }
+        .then((res) => {
+          this.$router.push({
+            path: "/order/pay",
+            query: {
+              orderNo: res.orderNo,
+            },
+          });
+        });
+    },
   },
 };
 </script>
