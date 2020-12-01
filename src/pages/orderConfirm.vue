@@ -141,7 +141,7 @@
           </div>
           <div class="btn-group">
             <a href="/#/cart" class="btn btn-default btn-large">返回购物车</a>
-            <a href="javascript:;" class="btn btn-large">去结算</a>
+            <a href="javascript:;" class="btn btn-large" @click="orderSubmit">去结算</a>
           </div>
         </div>
       </div>
@@ -190,10 +190,7 @@
             </select>
           </div>
           <div class="item">
-            <textarea
-              name="street"
-              v-model="checkedItem.receiverAddress"
-            ></textarea>
+            <textarea name="street" v-model="checkedItem.receiverAddress"></textarea>
           </div>
           <div class="item">
             <input
@@ -292,7 +289,7 @@ export default {
           receiverAddress,
           receiverZip,
         } = this.checkedItem;
-        let errMsg = "";
+        let errMsg ;
         if (!receiverName) {
           errMsg = "请输入收货人名称";
         } else if (!receiverMobile || !/\d{11}/.test(receiverMobile)) {
@@ -310,18 +307,10 @@ export default {
           this.$message.error(errMsg);
           return;
         }
-        let params = {
-          receiverName,
-          receiverMobile,
-          receiverProvince,
-          receiverCity,
-          receiverDistrict,
-          receiverAddress,
-          receiverZip,
-        };
+        let params = this.checkedItem
       }
       this.axios[method](url, params).then((res) => {
-        console.log(checkedItem);
+        console.log(params);
         this.closeModal();
         this.getAddressList();
         this.$message.success("操作成功");
@@ -344,6 +333,23 @@ export default {
         });
       });
     },
+    // 订单提交
+    orderSubmit(){
+      let item = this.list[this.checkedIndex]
+      if(!item){
+        this.$message.error('请选择一个收货地址')
+      }
+      this.axios.post('/orders',{
+        shippingId:item.id
+      }).then(res => {
+        this.$router.push({
+          path:'/order/pay',
+          query:{
+            orderNo:res.orderNo
+          }
+        })
+      })
+    }
   },
 };
 </script>
