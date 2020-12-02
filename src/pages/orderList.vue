@@ -54,6 +54,7 @@
               </div>
             </div>
           </div>
+          <!-- 1. 分页器进行分页 -->
           <el-pagination
             class="pagination"
             background
@@ -63,6 +64,10 @@
             @current-change="handleChange"
           >
           </el-pagination>
+          <!-- 2. 按钮加载更多分页方式-->
+          <!-- <el-button type="primary" :loading="loading" @click="loadMore"
+            >加载更多</el-button
+          > -->
           <NoData v-if="!loading && list.length == 0"></NoData>
         </div>
       </div>
@@ -74,7 +79,7 @@
 import OrderHeader from "./../components/OrderHeader";
 import Loading from "./../components/Loading";
 import NoData from "./../components/NoData";
-import { Pagination } from "element-ui";
+import { Pagination, Button } from "element-ui";
 export default {
   name: "list",
   components: {
@@ -82,6 +87,7 @@ export default {
     Loading,
     NoData,
     [Pagination.name]: Pagination,
+    [Button.name]: Button,
   },
   data() {
     return {
@@ -100,6 +106,7 @@ export default {
       this.axios
         .get("/orders", {
           params: {
+            pageSize:this.pageSize,
             pageNum: this.pageNum,
           },
         })
@@ -112,6 +119,25 @@ export default {
           this.loading = false;
         });
     },
+    // 加载更多分页方式使用
+    // getOrderList() {
+    //   this.loading = true;
+    //   this.axios
+    //     .get("/orders", {
+    //       params: {
+    //         pageSize: this.pageSize,
+    //         pageNum: this.pageNum,
+    //       },
+    //     })
+    //     .then((res) => {
+    //       this.loading = false;
+    //       this.list = this.list.concat(res.list);
+    //       this.total = res.total;
+    //     })
+    //     .catch(() => {
+    //       this.loading = false;
+    //     });
+    // },
     gotoPay(orderNo) {
       // this.$router.push({
       //   name:'order-pay',
@@ -130,6 +156,11 @@ export default {
       this.pageNum = pageNum;
       this.getOrderList();
     },
+    // 加载更多方式分页
+    // loadMore() {
+    //   this.PageNum++;
+    //   this.getOrderList();
+    // },
   },
 };
 </script>
