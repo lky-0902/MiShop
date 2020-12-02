@@ -8,45 +8,62 @@
     <div class="wrapper">
       <div class="container">
         <div class="order-box">
-          <loading v-if="loading"></loading> 
-          <div class="order" v-for="(order,index) in list" :key="index">
+          <loading v-if="loading"></loading>
+          <div class="order" v-for="(order, index) in list" :key="index">
             <div class="order-title">
               <div class="item-info fl">
-                {{order.createTime}}
+                {{ order.createTime }}
                 <span>|</span>
-                {{order.receiverName}}
+                {{ order.receiverName }}
                 <span>|</span>
-                订单号：{{order.orderNo}}
+                订单号：{{ order.orderNo }}
                 <span>|</span>
-                {{order.paymentTypeDesc}}
+                {{ order.paymentTypeDesc }}
               </div>
               <div class="item-money fr">
                 <span>应付金额：</span>
-                <span class="money">{{order.payment}}</span>
+                <span class="money">{{ order.payment }}</span>
                 <span>元</span>
               </div>
             </div>
             <div class="order-content clearfix">
               <div class="good-box fl">
-                <div class="good-list" v-for="(item,i) in order.orderItemVoList" :key="i">
+                <div
+                  class="good-list"
+                  v-for="(item, i) in order.orderItemVoList"
+                  :key="i"
+                >
                   <div class="good-img">
-                    <img v-lazy="item.productImage" alt="">
+                    <img v-lazy="item.productImage" alt="" />
                   </div>
                   <div class="good-name">
-                    <div class="p-name">{{item.productName}}</div>
-                    <div class="p-money">{{item.currentUnitPrice}} × {{item.quantity}}</div>
+                    <div class="p-name">{{ item.productName }}</div>
+                    <div class="p-money">
+                      {{ item.currentUnitPrice }} × {{ item.quantity }}
+                    </div>
                   </div>
                 </div>
               </div>
               <div class="good-state fr" v-if="order.status == 20">
-                <a href="javascript:;">{{order.statusDesc}}</a>
+                <a href="javascript:;">{{ order.statusDesc }}</a>
               </div>
               <div class="good-state fr" v-else>
-                <a href="javascript:;" @click="gotoPay(order.orderNo)">{{order.statusDesc}}</a>
+                <a href="javascript:;" @click="gotoPay(order.orderNo)">{{
+                  order.statusDesc
+                }}</a>
               </div>
             </div>
           </div>
-          <NoData v-if="!loading && list.length==0"></NoData>
+          <el-pagination
+            class="pagination"
+            background
+            layout="prev, pager, next"
+            :pageSize="pageSize"
+            :total="total"
+            @current-change="handleChange"
+          >
+          </el-pagination>
+          <NoData v-if="!loading && list.length == 0"></NoData>
         </div>
       </div>
     </div>
@@ -54,35 +71,48 @@
 </template>
 
 <script>
-import OrderHeader from './../components/OrderHeader'
-import Loading from './../components/Loading'
-import NoData from './../components/NoData'
+import OrderHeader from "./../components/OrderHeader";
+import Loading from "./../components/Loading";
+import NoData from "./../components/NoData";
+import { Pagination } from "element-ui";
 export default {
-  name:'list',
-  components:{
+  name: "list",
+  components: {
     OrderHeader,
     Loading,
-    NoData
+    NoData,
+    [Pagination.name]: Pagination,
   },
   data() {
     return {
-      loading:true,
-      list:[],
-    }
+      loading: true,
+      list: [],
+      pageSize: 10,
+      pageNum: 1,
+      total: 0,
+    };
   },
   mounted() {
-    this.getOrderList()
+    this.getOrderList();
   },
   methods: {
-    getOrderList(){
-      this.axios.get('/orders').then(res => {
-        this.loading = false
-        this.list = res.list
-      }).catch(() => {
-        this.loading = false
-      })
+    getOrderList() {
+      this.axios
+        .get("/orders", {
+          params: {
+            pageNum: this.pageNum,
+          },
+        })
+        .then((res) => {
+          this.loading = false;
+          this.list = res.list;
+          this.total = res.total;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
-    gotoPay(orderNo){
+    gotoPay(orderNo) {
       // this.$router.push({
       //   name:'order-pay',
       //   query:{
@@ -90,14 +120,18 @@ export default {
       //   }
       // })
       this.$router.push({
-        path:'/order/pay',
-        query:{
-          orderNo
-        }
-      })
-    }
+        path: "/order/pay",
+        query: {
+          orderNo,
+        },
+      });
+    },
+    handleChange(pageNum) {
+      this.pageNum = pageNum;
+      this.getOrderList();
+    },
   },
-}
+};
 </script>
 
 <style lang="scss">
@@ -165,7 +199,7 @@ export default {
         }
       }
       .pagination {
-        text-align: right;
+        text-align: center;
       }
       .el-pagination.is-background .el-pager li:not(.disabled).active {
         background-color: $colorA;
