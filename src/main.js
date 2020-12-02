@@ -6,7 +6,9 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueLazyLoad from 'vue-lazyload'
 import VueCookie from 'vue-cookie'
-import { Message } from 'element-ui'
+import {
+  Message
+} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 
 //这里不能用import引入，因为import是预编译加载，直接就拦截了，但是我们现在需要的是当mock = true才 拦截，所以用require
@@ -21,7 +23,7 @@ axios.defaults.timeout = 8000
 // 拦截器 接口错误拦截
 axios.interceptors.response.use(function (response) {
   let res = response.data;
-  let path =location.hash;
+  let path = location.hash;
   if (res.status == 0) { //成功
     return res.data
   } else if (res.status == 10) { //未登录报错
@@ -33,6 +35,10 @@ axios.interceptors.response.use(function (response) {
     this.$message.warning(res.msg)
     return Promise.reject(res)
   }
+}, (error) => {
+  let res = error.response
+  Message.error(res.data.message)
+  return Promise.reject(error)
 })
 
 

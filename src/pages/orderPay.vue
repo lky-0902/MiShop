@@ -13,7 +13,7 @@
             <div class="order-total">
               <p>
                 应付总额：
-                <span>2599</span>元
+                <span>{{payment}}</span>元
               </p>
               <p>
                 订单详情
@@ -69,13 +69,31 @@
         </div>
       </div>
     </div>
-    <scan-pay-code v-if="showPay" @close="closePayModal" :img="payImg"></scan-pay-code>
+    <scan-pay-code
+      v-if="showPay"
+      @close="closePayModal"
+      :img="payImg"
+    ></scan-pay-code>
+    <Modal
+      title="支付确认"
+      btnType="3"
+      :showModal="showPayModal"
+      sureText="查看订单"
+      cancelText="未支付"
+      @cancel="showPayModal = false"
+      @submit='goOrderList'
+    >
+      <template v-slot:body>
+        <p>请您确认是否已完成支付</p>
+      </template>
+    </Modal>
   </div>
 </template>
 
 <script>
-import QRCode from 'qrcode'
-import ScanPayCode from './../components/ScanPayCode'
+import QRCode from "qrcode";
+import ScanPayCode from "./../components/ScanPayCode";
+import Modal from "./../components/Modal";
 export default {
   name: "pay",
   data() {
@@ -85,12 +103,16 @@ export default {
       orderDetail: [], //订单详情，包含了商品列表
       showDetail: false, //是否显示订单详情
       payType: "", //支付类型
-      showPay:false,//是否显示微信支付弹框
-      payImg:'', // 微信二维码
+      showPay: false, //是否显示微信支付弹框
+      payImg: "", // 微信二维码
+      showPayModal:false, //是否显示二次支付确认弹框
+      payment:0,//应付金额
+      T:'',//定时器ID
     };
   },
-  components:{
-    ScanPayCode
+  components: {
+    ScanPayCode,
+    Modal,
   },
   mounted() {
     this.getOrderDetail();
@@ -101,13 +123,14 @@ export default {
         let item = res.shippingVo;
         this.addressInfo = `${item.receiverName} ${item.receiverMobile} ${item.receiverProvince} ${item.receiverCity} ${item.receiverDistrict} ${item.receiverName} ${item.receiverAddress}`;
         this.orderDetail = res.orderItemVoList;
+        this.payment = res.payment
       });
     },
     paySubmit(payType) {
       if (payType == 1) {
         this.payType = payType;
         window.open("/#/order/alipay?orderId=" + this.orderId, "_blank");
-      } else if(payType == 2){
+      } else if (payType == 2) {
         this.payType = payType;
         this.axios
           .post("/pay", {
@@ -117,18 +140,36 @@ export default {
             payType: 2, //1.支付宝 2.微信
           })
           .then((res) => {
-            QRCode.toDataURL(res.content).then(url =>{
-              this.showPay = true
-              this.payImg =url
-            }).catch(err => {
-              this.$message.error('微信二维码生成失败，请稍后重试')
-            })
+            QRCode.toDataURL(res.content)
+              .then((url) => {
+                this.showPay = true;
+                this.payImg = url;
+              })
+              .catch((err) => {
+                this.$message.error("微信二维码生成失败，请稍后重试");
+              });
           });
       }
     },
     // 关闭微信弹框
-    closePayModal(){
-      this.showPay = false
+    closePayModal() {
+      this.showPay = false;
+      this.showPayModal = true
+      clearInterval(this.T)
+    },
+    // 轮询当前订单支付状态
+    loopOrderState(){
+      this.T = setInterval(() => {
+        this.axios.get(`/orders/${this.orderId}`).then(res => {
+          if(res.status == 20){
+            clearInterval(this.T)
+            this.goOrderList()
+          }
+        })
+      }, 1000);
+    },
+    goOrderList(){
+      this.$router.push('/order/list')
     }
   },
 };
