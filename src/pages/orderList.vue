@@ -54,7 +54,7 @@
               </div>
             </div>
           </div>
-          <!-- 1. 分页器进行分页 -->
+          <!-- 一. 分页器进行分页 -->
           <el-pagination
             class="pagination"
             background
@@ -64,11 +64,48 @@
             @current-change="handleChange"
           >
           </el-pagination>
-          <!-- 2. 按钮加载更多分页方式-->
+          <!-- 二. 按钮加载更多分页方式-->
           <!-- <el-button type="primary" :loading="loading" @click="loadMore"
             >加载更多</el-button
           > -->
+          <!-- 三. 使用插件滚动加载，略微描述一下，无代码实现。
+            1.安装：npm install vue-infinite-scroll --save
+            2.引入：import infiniteScroll from 'vue-infinite-scroll'
+            3.和name、data同级配置：driectives:{infiniteScroll}
+            4.使用：<div class="scroll-more"
+          v-infinite-scroll="scrollMore" infinite-scroll-disabled="busy"
+          infinite-scroll-distance="410">
+            <img src="/imgs/loading-svg/loading-spinning-bubbles.png" alt="" v-show="loading">
+          </div>
+            5.在data中定义busy:true
+            6.getOrderList3(){
+              this.loading = true
+              this.axios.get('/orders',{
+                params:{
+                  pageSize:this.pageSize,
+                  pageNum:this.pageNum
+                }
+              }).then(res => {
+                this.list = this.list.concat(res.list)
+                this.loading = false
+                if(res.hasNextPage){
+                  this.busy = false
+                }else{
+                  this.busy = true
+                }
+              })
+            }
+            7.定义方法scrollMore
+              scrollMore(){
+                this.busy = true
+                setTimeout(() => {
+                  this.pageNum++
+                  this.getOrderList3()
+                },500)
+              }
+           -->
           <NoData v-if="!loading && list.length == 0"></NoData>
+          
         </div>
       </div>
     </div>
