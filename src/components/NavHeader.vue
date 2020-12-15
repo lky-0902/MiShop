@@ -14,7 +14,7 @@
           <a href="JavaScript:;" v-if="username">{{ username }}</a>
           <a href="JavaScript:;" v-if="!username" @click="login()">登录</a>
           <a href="JavaScript:;" v-if="username" @click="logout()">退出</a>
-          <a href="JavaScript:;" v-if="username">我的订单</a>
+          <a href="JavaScript:;" v-if="username" @click="gotoOrderList()">我的订单</a>
           <a href="JavaScript:;" class="my-cart" @click="goToCart()">
             <span class="icon-cart"></span>
             购物车({{ cartCount }})
@@ -200,6 +200,9 @@ export default {
     goToCart() {
       this.$router.push("/cart");
     },
+    gotoOrderList(){
+      this.$router.push("/order/list");
+    }
   },
 };
 </script>
